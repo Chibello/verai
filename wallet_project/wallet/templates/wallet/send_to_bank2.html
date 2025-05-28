@@ -1,0 +1,119 @@
+{% extends 'wallet/base.html' %}
+
+{% block title %}
+    <title>Send to Bank</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    .form-container {
+        max-width: 500px;
+        margin: auto;
+        background: #fff;
+        padding: 2rem;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        font-family: Arial, sans-serif;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #444;
+    }
+
+    input, textarea, select, button {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .message {
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .error {
+        color: #e74c3c;
+    }
+
+    .success {
+        color: #27ae60;
+    }
+
+    @media (max-width: 600px) {
+        .form-container {
+            padding: 1rem;
+        }
+
+        input, textarea, button {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="form-container">
+    <h2>Transfer to Bank</h2>
+
+    <form method="POST" action="{% url 'send_to_bank2' %}">
+        {% csrf_token %}
+
+        <label for="amount">Amount</label>
+        <input type="number" step="0.01" id="amount" name="amount" required>
+
+        <label for="currency">Currency</label>
+        <select id="currency" name="currency" required>
+            <option value="NGN" selected>NGN (₦)</option>
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+        </select>
+
+        <label for="account_bank">Bank Code</label>
+        <input type="text" id="account_bank" name="account_bank" placeholder="e.g. 058 for GTBank" required>
+
+        <label for="account_number">Account Number</label>
+        <input type="text" id="account_number" name="account_number" required>
+
+        <label for="narration">Narration</label>
+        <textarea id="narration" name="narration" placeholder="Optional description..."></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if error %}
+        <p class="message error">{{ error }}</p>
+    {% endif %}
+    {% if success %}
+        <p class="message success">{{ success }} (Reference: {{ reference }})</p>
+    {% endif %}
+</div>
+{% endblock %}

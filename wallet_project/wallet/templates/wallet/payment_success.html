@@ -1,0 +1,72 @@
+<!-- wallet/templates/wallet/payment_success.html -->
+
+{% extends 'wallet/base.html' %}
+
+{% block content %}
+<div class="payment-success-container">
+    <h2>Payment Successful!</h2>
+    <p>Your payment of <strong>{{ payment_response.amount }} {{ payment_response.currency }}</strong> has been successfully processed.</p>
+    <a href="{% url 'dashboard' %}" class="btn btn-success">Return to Dashboard</a>
+</div>
+{% endblock %}
+
+{% block custom_css %}
+<style>
+    body {
+        background-color: #f4f6f8;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .payment-success-container {
+        max-width: 600px;
+        margin: 60px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-success-container h2 {
+        color: #28a745;
+        font-size: 26px;
+        margin-bottom: 20px;
+    }
+
+    .payment-success-container p {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .payment-success-container .btn-success {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #28a745;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .payment-success-container .btn-success:hover {
+        background-color: #218838;
+    }
+
+    @media (max-width: 768px) {
+        .payment-success-container {
+            margin: 30px 15px;
+            padding: 20px;
+        }
+
+        .payment-success-container h2 {
+            font-size: 22px;
+        }
+
+        .payment-success-container p,
+        .payment-success-container .btn-success {
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}

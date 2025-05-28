@@ -1,0 +1,1874 @@
+/* Global Styles */
+
+body {
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    color: #333;
+}
+
+
+/* Navbar */
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+
+/* Cards */
+
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+}
+
+
+/* Textarea */
+
+textarea {
+    border-radius: 8px;
+    padding: 10px;
+}
+
+
+/* Post Images and Videos */
+
+.post-detail img,
+.post-detail video {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+}
+
+
+/* Comment Section */
+
+.comment {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+/* Footer */
+
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+
+/* Category Page Styles */
+
+.category-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    border-right: 1px solid #ccc;
+    padding: 20px;
+    background-color: #f9f9f9;
+    width: 250px;
+    margin-right: 20px;
+}
+
+.sidebar h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1.1rem;
+}
+
+.sidebar ul li a:hover {
+    text-decoration: underline;
+}
+
+
+/* Grid Layout */
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-md-4 {
+    flex: 0 0 31%;
+    margin-bottom: 20px;
+}
+
+
+/* Form Styling */
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+
+/* Links */
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/* Search Form Styles */
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #4CAF50;
+}
+
+.search-button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #45a049;
+}
+
+
+/* Login Form Styling */
+
+.login-container {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+p {
+    margin-top: 20px;
+}
+
+a {
+    color: #4CAF50;
+}
+
+
+/* Slider */
+
+.slider-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.slide img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+
+/* Mobile and Tablet Responsiveness */
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        text-align: center;
+    }
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        margin-bottom: 20px;
+    }
+    .col-md-4 {
+        flex: 0 0 48%;
+        margin-bottom: 20px;
+    }
+    /* Search Form */
+    .search-form {
+        flex-direction: column;
+        width: 90%;
+    }
+    .search-input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .search-button {
+        width: 100%;
+    }
+    /* Login Form */
+    .login-container {
+        width: 90%;
+        max-width: 400px;
+    }
+    /* Form Container */
+    .form-container {
+        width: 90%;
+        max-width: 500px;
+    }
+    /* Post Details */
+    .post-detail img,
+    .post-detail video {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .card-title {
+        font-size: 1.1rem;
+    }
+    .card-text {
+        font-size: 0.9rem;
+    }
+    .comment {
+        font-size: 0.9rem;
+    }
+    /* Category Page */
+    .category-title {
+        font-size: 1.75rem;
+    }
+    .sidebar {
+        padding: 15px;
+        width: 100%;
+    }
+    .sidebar h3 {
+        font-size: 1.2rem;
+    }
+    .container {
+        display: block;
+        padding: 10px;
+    }
+    .row {
+        flex-direction: column;
+    }
+    .col-md-4 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+
+/* Larger Screens (Desktop and above) */
+
+@media screen and (min-width: 1025px) {
+    .sidebar {
+        width: 300px;
+    }
+    .col-md-4 {
+        flex: 0 0 31%;
+    }
+    .form-container {
+        width: 50%;
+    }
+}
+
+
+/* Global Styles */
+
+body {
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    color: #333;
+}
+
+
+/* Navbar */
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+
+/* Cards */
+
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+}
+
+
+/* Textarea */
+
+textarea {
+    border-radius: 8px;
+    padding: 10px;
+}
+
+
+/* Post Images and Videos */
+
+.post-detail img,
+.post-detail video {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+}
+
+
+/* Comment Section */
+
+.comment {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+/* Footer */
+
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+
+/* Category Page Styles */
+
+.category-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    border-right: 1px solid #ccc;
+    padding: 20px;
+    background-color: #f9f9f9;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.sidebar h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1.1rem;
+}
+
+.sidebar ul li a:hover {
+    text-decoration: underline;
+}
+
+
+/* Grid Layout (Flexbox) */
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+/* Column Sizes */
+
+.col-md-4 {
+    flex: 0 0 31%;
+    margin-bottom: 20px;
+}
+
+
+/* Form Styling */
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+
+/* Links */
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/* Search Form Styles */
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #4CAF50;
+}
+
+.search-button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #45a049;
+}
+
+
+/* Login Form Styling */
+
+.login-container {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+p {
+    margin-top: 20px;
+}
+
+a {
+    color: #4CAF50;
+}
+
+
+/* Slider */
+
+.slider-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.slide img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+
+/* Mobile and Tablet Responsiveness */
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        text-align: center;
+    }
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        margin-bottom: 20px;
+    }
+    .col-md-4 {
+        flex: 0 0 48%;
+        margin-bottom: 20px;
+    }
+    /* Search Form */
+    .search-form {
+        flex-direction: column;
+        width: 90%;
+    }
+    .search-input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .search-button {
+        width: 100%;
+    }
+    /* Login Form */
+    .login-container {
+        width: 90%;
+        max-width: 400px;
+    }
+    /* Form Container */
+    .form-container {
+        width: 90%;
+        max-width: 500px;
+    }
+    /* Post Details */
+    .post-detail img,
+    .post-detail video {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .card-title {
+        font-size: 1.1rem;
+    }
+    .card-text {
+        font-size: 0.9rem;
+    }
+    .comment {
+        font-size: 0.9rem;
+    }
+    /* Category Page */
+    .category-title {
+        font-size: 1.75rem;
+    }
+    .sidebar {
+        padding: 15px;
+        width: 100%;
+    }
+    .sidebar h3 {
+        font-size: 1.2rem;
+    }
+    .container {
+        display: block;
+        padding: 10px;
+    }
+    .row {
+        flex-direction: column;
+    }
+    .col-md-4 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+
+/* Larger Screens (Desktop and above) */
+
+@media screen and (min-width: 1025px) {
+    .sidebar {
+        width: 300px;
+    }
+    .col-md-4 {
+        flex: 0 0 31%;
+    }
+    .form-container {
+        width: 50%;
+    }
+}
+
+
+/* Like and Comment Buttons */
+
+button {
+    width: 100%;
+    /* Make buttons full width on smaller screens */
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    /* Space between buttons */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+/* For small screens and mobile responsiveness */
+
+@media screen and (max-width: 768px) {
+    /* Make sure the like and comment buttons adjust to full width */
+    .like-button,
+    .comment-button {
+        width: 100%;
+        /* Full width for better touch on mobile */
+        margin-bottom: 15px;
+        /* Adding space between the buttons */
+    }
+}
+
+
+/* Ensure buttons in forms also look good */
+
+form button {
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    /* Full width for forms on small screens */
+}
+
+.comment-section button {
+    width: 100%;
+    /* Full width for comment button */
+}
+
+
+/* Like and Comment Buttons */
+
+button {
+    width: 100%;
+    /* Make buttons full width on smaller screens */
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    /* Space between buttons */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+/* For small screens and mobile responsiveness */
+
+@media screen and (max-width: 768px) {
+    /* Make sure the like and comment buttons adjust to full width */
+    .like-button,
+    .comment-button {
+        width: 100%;
+        /* Full width for better touch on mobile */
+        margin-bottom: 15px;
+        /* Adding space between the buttons */
+    }
+}
+
+
+/* Ensure buttons in forms also look good */
+
+form button {
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    /* Full width for forms on small screens */
+}
+
+.comment-section button {
+    width: 100%;
+    /* Full width for comment button */
+}/* Global Styles */
+
+body {
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    color: #333;
+}
+
+
+/* Navbar */
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+
+/* Cards */
+
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+}
+
+
+/* Textarea */
+
+textarea {
+    border-radius: 8px;
+    padding: 10px;
+}
+
+
+/* Post Images and Videos */
+
+.post-detail img,
+.post-detail video {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+}
+
+
+/* Comment Section */
+
+.comment {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+/* Footer */
+
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+
+/* Category Page Styles */
+
+.category-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    border-right: 1px solid #ccc;
+    padding: 20px;
+    background-color: #f9f9f9;
+    width: 250px;
+    margin-right: 20px;
+}
+
+.sidebar h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1.1rem;
+}
+
+.sidebar ul li a:hover {
+    text-decoration: underline;
+}
+
+
+/* Grid Layout */
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-md-4 {
+    flex: 0 0 31%;
+    margin-bottom: 20px;
+}
+
+
+/* Form Styling */
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+
+/* Links */
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/* Search Form Styles */
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #4CAF50;
+}
+
+.search-button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #45a049;
+}
+
+
+/* Login Form Styling */
+
+.login-container {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+p {
+    margin-top: 20px;
+}
+
+a {
+    color: #4CAF50;
+}
+
+
+/* Slider */
+
+.slider-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.slide img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+
+/* Mobile and Tablet Responsiveness */
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        text-align: center;
+    }
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        margin-bottom: 20px;
+    }
+    .col-md-4 {
+        flex: 0 0 48%;
+        margin-bottom: 20px;
+    }
+    /* Search Form */
+    .search-form {
+        flex-direction: column;
+        width: 90%;
+    }
+    .search-input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .search-button {
+        width: 100%;
+    }
+    /* Login Form */
+    .login-container {
+        width: 90%;
+        max-width: 400px;
+    }
+    /* Form Container */
+    .form-container {
+        width: 90%;
+        max-width: 500px;
+    }
+    /* Post Details */
+    .post-detail img,
+    .post-detail video {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .card-title {
+        font-size: 1.1rem;
+    }
+    .card-text {
+        font-size: 0.9rem;
+    }
+    .comment {
+        font-size: 0.9rem;
+    }
+    /* Category Page */
+    .category-title {
+        font-size: 1.75rem;
+    }
+    .sidebar {
+        padding: 15px;
+        width: 100%;
+    }
+    .sidebar h3 {
+        font-size: 1.2rem;
+    }
+    .container {
+        display: block;
+        padding: 10px;
+    }
+    .row {
+        flex-direction: column;
+    }
+    .col-md-4 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+
+/* Larger Screens (Desktop and above) */
+
+@media screen and (min-width: 1025px) {
+    .sidebar {
+        width: 300px;
+    }
+    .col-md-4 {
+        flex: 0 0 31%;
+    }
+    .form-container {
+        width: 50%;
+    }
+}
+
+
+/* Global Styles */
+
+body {
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    color: #333;
+}
+
+
+/* Navbar */
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+
+/* Cards */
+
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+}
+
+
+/* Textarea */
+
+textarea {
+    border-radius: 8px;
+    padding: 10px;
+}
+
+
+/* Post Images and Videos */
+
+.post-detail img,
+.post-detail video {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+}
+
+
+/* Comment Section */
+
+.comment {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+/* Footer */
+
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+
+/* Category Page Styles */
+
+.category-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    border-right: 1px solid #ccc;
+    padding: 20px;
+    background-color: #f9f9f9;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.sidebar h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1.1rem;
+}
+
+.sidebar ul li a:hover {
+    text-decoration: underline;
+}
+
+
+/* Grid Layout (Flexbox) */
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+/* Column Sizes */
+
+.col-md-4 {
+    flex: 0 0 31%;
+    margin-bottom: 20px;
+}
+
+
+/* Form Styling */
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+
+/* Links */
+
+a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/* Search Form Styles */
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #4CAF50;
+}
+
+.search-button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #45a049;
+}
+
+
+/* Login Form Styling */
+
+.login-container {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+p {
+    margin-top: 20px;
+}
+
+a {
+    color: #4CAF50;
+}
+
+
+/* Slider */
+
+.slider-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.slide img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+
+/* Mobile and Tablet Responsiveness */
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        text-align: center;
+    }
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        margin-bottom: 20px;
+    }
+    .col-md-4 {
+        flex: 0 0 48%;
+        margin-bottom: 20px;
+    }
+    /* Search Form */
+    .search-form {
+        flex-direction: column;
+        width: 90%;
+    }
+    .search-input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .search-button {
+        width: 100%;
+    }
+    /* Login Form */
+    .login-container {
+        width: 90%;
+        max-width: 400px;
+    }
+    /* Form Container */
+    .form-container {
+        width: 90%;
+        max-width: 500px;
+    }
+    /* Post Details */
+    .post-detail img,
+    .post-detail video {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .card-title {
+        font-size: 1.1rem;
+    }
+    .card-text {
+        font-size: 0.9rem;
+    }
+    .comment {
+        font-size: 0.9rem;
+    }
+    /* Category Page */
+    .category-title {
+        font-size: 1.75rem;
+    }
+    .sidebar {
+        padding: 15px;
+        width: 100%;
+    }
+    .sidebar h3 {
+        font-size: 1.2rem;
+    }
+    .container {
+        display: block;
+        padding: 10px;
+    }
+    .row {
+        flex-direction: column;
+    }
+    .col-md-4 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+
+/* Larger Screens (Desktop and above) */
+
+@media screen and (min-width: 1025px) {
+    .sidebar {
+        width: 300px;
+    }
+    .col-md-4 {
+        flex: 0 0 31%;
+    }
+    .form-container {
+        width: 50%;
+    }
+}
+
+
+/* Like and Comment Buttons */
+
+button {
+    width: 100%;
+    /* Make buttons full width on smaller screens */
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    /* Space between buttons */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+/* For small screens and mobile responsiveness */
+
+@media screen and (max-width: 768px) {
+    /* Make sure the like and comment buttons adjust to full width */
+    .like-button,
+    .comment-button {
+        width: 100%;
+        /* Full width for better touch on mobile */
+        margin-bottom: 15px;
+        /* Adding space between the buttons */
+    }
+}
+
+
+/* Ensure buttons in forms also look good */
+
+form button {
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    /* Full width for forms on small screens */
+}
+
+.comment-section button {
+    width: 100%;
+    /* Full width for comment button */
+}
+
+
+/* Like and Comment Buttons */
+
+button {
+    width: 100%;
+    /* Make buttons full width on smaller screens */
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+    /* Space between buttons */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+/* For small screens and mobile responsiveness */
+
+@media screen and (max-width: 768px) {
+    /* Make sure the like and comment buttons adjust to full width */
+    .like-button,
+    .comment-button {
+        width: 100%;
+        /* Full width for better touch on mobile */
+        margin-bottom: 15px;
+        /* Adding space between the buttons */
+    }
+}
+
+
+/* Ensure buttons in forms also look good */
+
+form button {
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+    /* Full width for forms on small screens */
+}
+
+.comment-section button {
+    width: 100%;
+    /* Full width for comment button */
+}
+
+{% for comment in post.comment_set.all %}
+    <div class="comment">
+        <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+
+        <!-- Replies -->
+        {% for reply in comment.replies.all %}
+            <div class="reply ml-4">
+                <p><strong>{{ reply.user.username }}</strong>: {{ reply.content }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}

@@ -1,0 +1,107 @@
+{% extends 'wallet/base.html' %}
+
+{% block title %}
+<title>Admin Dashboard</title>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+    <!-- Search Form -->
+    <form method="GET" class="search-bar text-center mb-4">
+        <input type="text" name="q" class="form-control d-inline-block w-50" placeholder="Search users or transactions..." value="{{ query }}">
+        <button type="submit" class="btn btn-primary mt-2 mt-md-0 ms-md-2">Search</button>
+    </form>
+
+    <!-- Users Table -->
+    <h4 class="mb-3">Users</h4>
+    <div class="table-responsive mb-5">
+        <table class="table table-bordered table-hover align-middle text-nowrap">
+            <thead class="table-dark">
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>USD</th>
+                    <th>NGN</th>
+                    <th>EUR</th>
+                    <th>GBP</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>${{ user.balance_usd|floatformat:2|default:"0.00" }}</td>
+                    <td>₦{{ user.balance_ngn|floatformat:2|default:"0.00" }}</td>
+                    <td>€{{ user.balance_eur|floatformat:2|default:"0.00" }}</td>
+                    <td>£{{ user.balance_gbp|floatformat:2|default:"0.00" }}</td>
+                    <td>
+                        <!-- Add edit/delete links here if needed -->
+                        <!-- <a href="#" class="btn btn-sm btn-success me-1">Edit</a>
+                        <a href="#" class="btn btn-sm btn-danger">Delete</a> -->
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No users found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Transactions Table -->
+    <h4 class="mb-3">Transactions</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-nowrap">
+            <thead class="table-dark">
+                <tr>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th>Currency</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Reference</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                <tr>
+                    <td>{{ tx.user.username }}</td>
+                    <td>{{ tx.amount }}</td>
+                    <td>{{ tx.currency }}</td>
+                    <td>{{ tx.transaction_type }}</td>
+                    <td>
+                        <span class="
+                            {% if tx.status == 'Completed' %}
+                                text-success fw-bold
+                            {% elif tx.status == 'Pending' %}
+                                text-warning fw-bold
+                            {% else %}
+                                text-danger fw-bold
+                            {% endif %}
+                        ">
+                            {{ tx.status }}
+                        </span>
+                    </td>
+                    <td>{{ tx.reference }}</td>
+                    <td>{{ tx.timestamp|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        <!-- Optional admin actions here -->
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No transactions found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

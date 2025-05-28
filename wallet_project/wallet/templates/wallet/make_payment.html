@@ -1,0 +1,108 @@
+{% extends 'wallet/base.html' %}
+
+{% block content %}
+<h2 class="text-center">Make a Payment</h2>
+
+<div class="payment-container">
+    <form method="POST" class="payment-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.amount.id_for_label }}">Amount</label>
+            {{ form.amount }}
+            <small class="form-text text-muted">Enter the amount to be paid.</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.currency.id_for_label }}">Currency</label>
+            {{ form.currency }}
+            <small class="form-text text-muted">Select the currency for payment.</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-submit" aria-label="Pay Now">Pay Now</button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block custom_css %}
+<style>
+    body {
+        background-color: #f4f6f8;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .payment-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .payment-form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .payment-form .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .payment-form .form-group input,
+    .payment-form .form-group select,
+    .payment-form .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+    }
+
+    .payment-form button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .payment-form button:hover {
+        background-color: #0056b3;
+    }
+
+    @media (max-width: 768px) {
+        .payment-container {
+            margin: 20px;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        .payment-form .form-group input,
+        .payment-form .form-group select,
+        .payment-form .form-group textarea {
+            font-size: 14px;
+        }
+
+        .payment-form button {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}

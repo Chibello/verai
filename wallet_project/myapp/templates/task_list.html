@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>Available Tasks</h2>
+        <ul class="list-group">
+            {% for task in tasks %}
+                <li class="list-group-item">
+                    <h4>{{ task.title }}</h4>
+                    <p>{{ task.description }}</p>
+                    <p><strong>Points:</strong> {{ task.points }}</p>
+                    <a href="{% url 'complete_task' task.id %}" class="btn btn-success">Complete Task</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

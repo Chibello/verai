@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>Send Rewards to User</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="user_id">Select User</label>
+                <select name="user_id" id="user_id" class="form-control">
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="points">Points to Add</label>
+                <input type="number" name="points" id="points" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Points</button>
+        </form>
+    </div>
+{% endblock %}

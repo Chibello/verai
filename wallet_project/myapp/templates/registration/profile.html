@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="profile">
+        <h1>{{ user.username }}'s Profile</h1>
+
+        {% if user.profile.image %}
+            <img src="{{ user.profile.image.url }}" class="img-fluid mb-3" alt="{{ user.username }}'s profile picture">
+        {% endif %}
+
+        <p>Username: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+
+        {% if user.profile.whatsapp_number %}
+            <p>
+                WhatsApp: 
+                <a href="https://wa.me/{{ user.profile.whatsapp_number }}" target="_blank" class="btn btn-success">
+                    Chat on WhatsApp
+                </a>
+            </p>
+        {% endif %}
+
+        <!-- Add more user info here -->
+        
+        <section class="post-form-section mt-5">
+            <h2>Create a New Post</h2>
+
+            <!-- Display the post creation form -->
+            <form method="POST" class="post-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    {{ form.title }}
+                </div>
+                <div class="form-group">
+                    <label for="content">Content:</label>
+                    {{ form.content }}
+                </div>
+                <button type="submit" class="submit-btn">Create Post</button>
+            </form>
+        </section>
+
+        <footer class="profile-footer mt-5">
+            <p><a href="{% url 'logout' %}" class="logout-btn">Logout</a></p>
+        </footer>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+<!-- wallet_overview.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>Your Wallet Overview</h2>
+        <p><strong>Balance:</strong> {{ wallet.balance }} points</p>
+        <p><strong>Money:</strong> {{ wallet.money }} USD</p>
+
+        <!-- Link to request withdrawal -->
+        <a href="{% url 'request_withdrawal' %}" class="btn btn-primary">Request Withdrawal</a>
+    </div>
+
+    <div class="container">
+        <h2>Wallet Overview</h2>
+        <p>Balance: {{ user.wallet_balance }}</p>
+        <h3>Transaction History</h3>
+        <ul>
+            {% for transaction in transactions %}
+                <li>{{ transaction.date }} - {{ transaction.amount }} - {{ transaction.type }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}
+
+

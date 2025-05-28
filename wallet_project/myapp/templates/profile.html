@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile">
+    <h1>{{ user.username }}'s Profile</h1>
+
+    {% if user.profile.image %}
+        <img src="{{ user.profile.image.url }}" class="img-fluid mb-3" alt="{{ user.username }}'s profile picture">
+    {% endif %}
+
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+
+    {% if user.profile.whatsapp_number %}
+        <p>
+            <strong>WhatsApp:</strong>
+            <a href="https://wa.me/{{ user.profile.whatsapp_number }}" target="_blank" class="btn btn-success">
+                Chat on WhatsApp
+            </a>
+        </p>
+    {% endif %}
+
+    <!-- 💼 Wallet Section -->
+    <hr>
+    <h2 class="mt-4">💼 Wallet</h2>
+    <div class="wallet-links mb-4">
+        <a href="{% url 'wallet_overview' %}" class="btn btn-outline-primary btn-sm mr-2">Wallet Overview</a>
+        <a href="{% url 'wallet' %}" class="btn btn-outline-secondary btn-sm mr-2">Wallet Settings</a>
+        <a href="{% url 'withdraw_rewards' %}" class="btn btn-outline-success btn-sm">Withdraw Rewards</a>
+    </div>
+
+    <!-- ✍️ Post Form -->
+    <section class="post-form-section mt-5">
+        <h2>Create a New Post</h2>
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Title:</label>
+                {{ form.title }}
+            </div>
+            <div class="form-group">
+                <label for="content">Content:</label>
+                {{ form.content }}
+            </div>
+            <button type="submit" class="submit-btn btn btn-primary">Create Post</button>
+        </form>
+    </section>
+
+    <!-- 🔓 Logout -->
+    <footer class="profile-footer mt-5">
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </footer>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'wallet/base.html' %}
+
+   {% block title%}
+     <title> Transfer </title>
+   {% endblock%}
+
+{% block content %}
+
+<style>
+    .form-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #f4f6f8;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .form-container h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 25px;
+    }
+
+    .form-container label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .form-container input[type="text"],
+    .form-container select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    .form-container button {
+        width: 100%;
+        padding: 12px;
+        background-color: #0066cc;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-container button:hover {
+        background-color: #004a99;
+    }
+</style>
+
+<div class="form-container">
+    <h2>Transfer to Bank</h2>
+    <form method="POST" action="{% url 'send_to_bank' %}">
+        {% csrf_token %}
+        <label>Bank Code (e.g., 044):</label>
+        <input type="text" name="account_bank" required>
+
+        <label>Account Number:</label>
+        <input type="text" name="account_number" required>
+
+        <label>Amount:</label>
+        <input type="text" name="amount" step="0.01" required>
+
+        <label>Currency:</label>
+        <select id="currency" name="currency" required>
+            <option value="NGN" selected>NGN (₦)</option>
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+        </select>
+
+        <label>Narration:</label>
+        <input type="text" name="narration" placeholder="e.g. Wallet withdrawal">
+
+        <button type="submit">Send Money</button>
+    </form>
+</div>
+
+{% if error %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
+{% if success %}
+    <p style="color:green;">{{ success }} - Ref: {{ reference }}</p>
+{% endif %}
+
+{% endblock %}
+

@@ -1,0 +1,110 @@
+{% extends 'wallet/base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f4f6f8;
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .custom-container {
+        max-width: 450px;
+        margin: 60px auto;
+        padding: 2rem;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 18px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+
+    input:focus,
+    select:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    .error-message {
+        background-color: #ffe6e6;
+        color: #b30000;
+        border: 1px solid #ffcccc;
+        padding: 12px;
+        border-radius: 6px;
+        margin-top: 1rem;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+        .custom-container {
+            margin: 30px 20px;
+            padding: 1.5rem;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        button {
+            font-size: 14px;
+        }
+    }
+</style>
+
+<div class="custom-container">
+    <h2>Transfer Funds</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="receiver_username" placeholder="Receiver's Username" required>
+        <input type="number" name="amount" placeholder="Amount" step="0.01" required>
+
+        <label for="currency">Currency</label>
+        <select id="currency" name="currency" required>
+            <option value="USD">USD - Dollar</option>
+            <option value="NGN">NGN - Naira</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - Pounds</option>
+        </select>
+        <button type="submit">Transfer</button>
+    </form>
+
+    {% if error %}
+        <div class="error-message">{{ error }}</div>
+    {% endif %}
+</div>
+{% endblock %}

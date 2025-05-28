@@ -1,0 +1,23 @@
+<!-- manage_withdrawals.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>Manage Withdrawal Requests</h2>
+        <ul class="list-group">
+            {% for request in requests %}
+                <li class="list-group-item">
+                    {{ request.user.username }} requested {{ request.amount }}
+                    <form method="POST" action="{% url 'approve_withdrawal' request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Approve</button>
+                    </form>
+                    <form method="POST" action="{% url 'reject_withdrawal' request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Reject</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

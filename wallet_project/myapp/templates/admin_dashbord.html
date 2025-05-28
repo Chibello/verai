@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 bg-dark text-white p-4">
+                <h3>Admin Dashboard</h3>
+                <ul class="nav flex-column">
+                    
+                    <li class="nav-item">
+                        <a href="#pending-posts" class="nav-link text-white">Pending Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'user_management' %}" class="nav-link text-white">User Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'withdraw_reward' %}" class="nav-link text-white">Withdraw Reward</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'wallet_overview' %}" class="nav-link text-white">Wallet Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'manage_withdrawals' %}" class="nav-link text-white">Manage Withdrawals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#site-settings" class="nav-link text-white">Site Settings</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4">
+                <h1>Welcome, {{ user.username }}!</h1>
+
+                <!-- Pending Posts Section -->
+                <div id="pending-posts" class="section">
+                    <h2>Pending Posts</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in pending_posts %}
+                                <tr>
+                                    <td>{{ post.title }}</td>
+                                    <td>{{ post.author.username }}</td>
+                                    <td>{{ post.status }}</td>
+                                    <td>
+                                        <a href="{% url 'approve_post' post.id %}" class="btn btn-success btn-sm">Approve</a>
+                                        <a href="{% url 'reject_post' post.id %}" class="btn btn-danger btn-sm">Reject</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- User Management Section -->
+                <div id="user-management" class="section">
+                    <h2>User Management</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.is_active|yesno:"Active,Inactive" }}</td>
+                                    <td>
+                                        <a href="{% url 'activate_user' user.id %}" class="btn btn-info btn-sm">Activate</a>
+                                        <a href="{% url 'promote_user' user.id %}" class="btn btn-warning btn-sm">Promote to Admin</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Manage Withdrawals Section -->
+                <div id="manage-withdrawals" class="section">
+                    <h2>Manage Withdrawals</h2>
+                    <ul>
+                        {% for request in withdrawal_requests %}
+                            <li>
+                                {{ request.user.username }} requested {{ request.amount }} - 
+                                
+                                <a href="{% url 'approve_withdrawal' request.id %}">Approve</a> | 
+                                <a href="{% url 'reject_withdrawal' request.id %}">Reject</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Site Settings Section -->
+                <div id="site-settings" class="section">
+                    <h2>Site Settings</h2>
+                    <form method="POST" action="{% url 'toggle_moderation' %}">
+                        {% csrf_token %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="moderationToggle" name="moderation_enabled" {% if settings.moderation_enabled %} checked {% endif %}>
+                            <label class="form-check-label" for="moderationToggle">Enable Post Moderation</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,213 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ZG | BLOG{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Static CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/slidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .social-media-container .btn {
+            transition: background-color 0.3s ease;
+            margin: 5px;
+        }
+
+        /* Dark Mode Socials */
+        body.dark-mode .btn-facebook { background-color: #3b5998; }
+        body.dark-mode .btn-twitter { background-color: #1da1f2; }
+        body.dark-mode .btn-linkedin { background-color: #0077b5; }
+        body.dark-mode .btn-instagram { background-color: #e1306c; }
+        body.dark-mode .btn-whatsapp { background-color: #25d366; }
+
+        /* Light Mode Socials */
+        .btn-facebook { background-color: #4267b2; }
+        .btn-twitter { background-color: #00acee; }
+        .btn-linkedin { background-color: #0e76a8; }
+        .btn-instagram { background-color: #c32aa3; }
+        .btn-whatsapp { background-color: #25d366; }
+
+        .navbar-nav .nav-item {
+            margin-bottom: 10px;
+        }
+
+        /* Adjust padding for smaller screens */
+        .social-media-container .btn {
+            width: 100%;
+        }
+
+        /* Adjust layout for social media buttons */
+        @media (min-width: 768px) {
+            .social-media-container .btn {
+                width: auto;
+            }
+        }
+
+        /* Ensuring search bar is centered and stretches across more space */
+        .search-bar {
+            max-width: 800px; /* You can adjust the max-width as per your design */
+            width: 100%;
+            margin: 0 auto; /* Ensures it is centered horizontally */
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    <a class="navbar-brand" href="/">ZG-Blog</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'profile' user_id=user.id %}">Profile</a></li>
+                <li class="nav-item">
+                    <a href="{% url 'create_basic_post' %}" class="btn btn-info btn-sm mr-2">Create Basic Post</a>
+                    <a href="{% url 'create_media_post' %}" class="btn btn-info btn-sm">Create Media Post</a>
+                </li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'post_list' %}">All Posts</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Sign Up</a></li>
+            {% endif %}
+
+            
+          {% if user.is_superuser %}
+          <!-- Only show Admin Dashboard and Generate Funds to admin users -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+          </li>
+          <!--li class="nav-item">
+            <a class="nav-link" href="{% url 'generate_funds' %}">Generate Funds</a>
+          </li-->         
+        {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<!-- Dark Mode Toggle -->
+<div class="container text-center mt-3">
+    <label for="darkModeToggle">Dark Mode:</label>
+    <input type="checkbox" id="darkModeToggle">
+</div>
+
+<!-- Django Messages -->
+{% if messages %}
+<div class="container mt-3">
+    <ul class="alert alert-info mb-0">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<!-- Search Form -->
+<!--<div class="container mt-4 mb-5">
+    <form method="GET" action="{% url 'search_posts' %}" class="search-bar row justify-content-center g-2 mb-4">
+        <div class="col-12 col-md-8">
+            <input type="text" name="q" placeholder="Search posts..." value="{{ request.GET.q }}"
+                   class="form-control form-control-lg" aria-label="Search">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-lg btn-primary">Search</button>
+        </div>
+    </form>
+</div-->
+
+{% block content%}
+
+
+
+{% endblock%}
+
+<!-- Social Media Buttons -->
+<div class="social-media-container text-center mt-5">
+    <h4>Share this blog:</h4>
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-4">
+            <a href="https://facebook.com" class="btn btn-facebook btn-lg mx-2" target="_blank">
+                <i class="fab fa-facebook-f"></i> Facebook
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <a href="https://twitter.com" class="btn btn-twitter btn-lg mx-2" target="_blank">
+                <i class="fab fa-twitter"></i> Twitter
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <a href="https://linkedin.com" class="btn btn-linkedin btn-lg mx-2" target="_blank">
+                <i class="fab fa-linkedin-in"></i> LinkedIn
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <a href="https://www.instagram.com" class="btn btn-instagram btn-lg mx-2" target="_blank">
+                <i class="fab fa-instagram"></i> Instagram
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <a href="https://wa.me/?text={{ request.build_absolute_uri }}" class="btn btn-whatsapp btn-lg mx-2" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark py-3 mt-5">
+    <div class="container text-center">
+        <p>&copy; 2025 ZG Blog. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/scripts.js' %}"></script>
+<script src="{% static 'js/slidebar.js' %}"></script>
+
+<!-- Dark Mode Toggle Script -->
+<script>
+    const toggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        body.classList.add('dark-mode');
+        toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+        if (toggle.checked) {
+            body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            body.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', 'disabled');
+        }
+    });
+</script>
+
+</body>
+</html>

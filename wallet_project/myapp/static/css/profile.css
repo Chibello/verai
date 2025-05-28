@@ -1,0 +1,122 @@
+/* static/css/profile.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    padding: 20px;
+}
+
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-header h1 {
+    font-size: 28px;
+    color: #4CAF50;
+}
+
+.post-form-section {
+    margin-top: 40px;
+}
+
+.post-form-section h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+textarea {
+    height: 150px;
+}
+
+.submit-btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+.profile-footer {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.logout-btn {
+    font-size: 16px;
+    color: #f44336;
+    text-decoration: none;
+}
+
+.logout-btn:hover {
+    text-decoration: underline;
+}
+
+
+/* Media Query for Mobile Devices */
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 20px;
+    }
+    .profile-header h1 {
+        font-size: 24px;
+    }
+    .post-form-section h2 {
+        font-size: 20px;
+    }
+    .submit-btn {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}

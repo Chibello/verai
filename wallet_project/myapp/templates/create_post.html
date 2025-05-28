@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <br><center><h1>Create a New Post</h1></center><br><br>
+
+    {% if not post_type %}
+    <!-- Ask the user to choose the post type -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="post_type">Choose post type</label>
+            <select class="form-control" id="post_type" name="post_type" required>
+                <option value="basic">Basic Post (Title, Image & Content)</option>
+                <option value="media">Media Post (Image, Video, etc.)</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+    {% else %}
+        <!-- Show form based on selected post type -->
+        {% if post_type == 'basic' %}
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ basic_form.as_p }}  <!-- Render basic form -->
+                <button type="submit" class="btn btn-primary">Create Post</button>
+            </form>
+        {% elif post_type == 'media' %}
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ media_form.as_p }}  <!-- Render media form -->
+                <button type="submit" class="btn btn-primary">Create Post</button>
+            </form>
+        {% endif %}
+    {% endif %}
+{% endblock %}

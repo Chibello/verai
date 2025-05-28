@@ -1,0 +1,72 @@
+<!-- wallet/templates/wallet/payment_failed.html -->
+
+{% extends 'wallet/base.html' %}
+
+{% block content %}
+<div class="payment-failed-container">
+    <h2>Payment Failed</h2>
+    <p>{{ error }}</p>
+    <a href="{% url 'make_payment' %}" class="btn btn-danger">Try Again</a>
+</div>
+{% endblock %}
+
+{% block custom_css %}
+<style>
+    body {
+        background-color: #f4f6f8;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .payment-failed-container {
+        max-width: 600px;
+        margin: 60px auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-failed-container h2 {
+        color: #dc3545;
+        font-size: 26px;
+        margin-bottom: 20px;
+    }
+
+    .payment-failed-container p {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .payment-failed-container .btn-danger {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #dc3545;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .payment-failed-container .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    @media (max-width: 768px) {
+        .payment-failed-container {
+            margin: 30px 15px;
+            padding: 20px;
+        }
+
+        .payment-failed-container h2 {
+            font-size: 22px;
+        }
+
+        .payment-failed-container p,
+        .payment-failed-container .btn-danger {
+            font-size: 14px;
+        }
+    }
+</style>
+{% endblock %}

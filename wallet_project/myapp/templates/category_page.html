@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+{% load static %}
+
+<title>{% block title %}ZG|category{% endblock %}</title>
+<h1 class="text-center">{{ category.name }} Posts</h1>
+<div class="row">
+    {% for post in posts %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}"> {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+                <a href="{% url 'post_detail' post.id %}" class="btn btn-primary">Read More</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No posts found in this category.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

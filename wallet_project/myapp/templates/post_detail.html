@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}ZG | {{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <!-- ✅ Intro Section -->
+    <section class="bg-light p-4 p-md-5 rounded mb-5 text-center shadow-sm">
+        <h2 class="mb-3">Explore: {{ post.title }}</h2>
+        <p class="lead text-muted">Dive into this post and discover valuable insights, ideas, or inspiration from our creator <strong>{{ post.author.username }}</strong>.</p>
+    </section>
+
+    <!-- 📰 Post Header -->
+    <div class="mb-4">
+        <h1 class="fw-bold">{{ post.title }}</h1>
+        <p class="text-muted d-flex align-items-center flex-wrap gap-2">
+            {% if post.author.profile.image %}
+                <img src="{{ post.author.profile.image.url }}" alt="{{ post.author.username }}'s profile picture"
+                     class="rounded-circle me-2" width="35" height="35">
+            {% else %}
+                <img src="/static/images/default-profile.png" alt="Default profile picture"
+                     class="rounded-circle me-2" width="35" height="35">
+            {% endif %}
+            <span>
+                By: <a href="{% url 'profile' post.author.id %}">{{ post.author.username }}</a> |
+                Category: {{ post.category.name }} |
+                Posted on: {{ post.date_posted|date:"M d, Y" }}
+            </span>
+        </p>
+    </div>
+
+    <!-- 🖼 Media Section -->
+    <div class="mb-4">
+        {% if post.video_file %}
+            <video class="w-100 rounded shadow-sm mb-3" controls>
+                <source src="{{ post.video_file.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% elif post.reel %}
+            <video class="w-100 rounded shadow-sm mb-3" controls>
+                <source src="{{ post.reel.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% elif post.image %}
+            {% if post.image.url %}
+                <img src="{{ post.image.url }}" class="img-fluid rounded shadow-sm mb-3" alt="{{ post.title }}">
+            {% endif %}
+        {% elif post.video %}
+            <div class="ratio ratio-16x9 mb-3">
+                <iframe src="{{ post.video }}" title="{{ post.title }}" allowfullscreen></iframe>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- 📝 Content -->
+    <div class="mb-4">
+        <p>{{ post.content|linebreaks }}</p>
+    </div>
+
+    <!-- ❤️ Like Section -->
+    <div class="mb-5">
+        <h5>Likes: {{ post.likes.count }}</h5>
+        <form method="POST" action="{% url 'like_post' post.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-primary btn-sm">
+                {% if has_liked %}
+                    Unlike
+                {% else %}
+                    Like
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    <!-- 💬 Comments -->
+    <div class="mb-4">
+        <h4 class="mb-3">Comments ({{ post.comment_set.count }})</h4>
+        {% for comment in post.comment_set.all %}
+            <div class="border p-3 mb-3 rounded">
+                <p class="mb-1">
+                    <strong>{{ comment.user.username }}</strong>
+                    {% if comment.user.profile.image %}
+                        <img src="{{ comment.user.profile.image.url }}" class="rounded-circle ms-2" width="20" height="20" alt="{{ comment.user.username }}">
+                    {% endif %}
+                    <br>
+                    {{ comment.content }}
+                </p>
+
+                <form method="POST" action="{% url 'like_comment' comment.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Like Comment</button>
+                </form>
+
+                <!-- Reply Form -->
+                <form method="POST" action="{% url 'reply_comment' comment.id %}" class="mt-2">
+                    {% csrf_token %}
+                    <textarea class="form-control mb-2" name="content" rows="2" placeholder="Reply..."></textarea>
+                    <button type="submit" class="btn btn-sm btn-success w-100">Reply</button>
+                </form>
+            </div>
+        {% empty %}
+            <p class="text-muted">No comments yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- ✍️ Comment Form -->
+    <form method="POST" action="{% url 'comment_on_post' post.id %}">
+        {% csrf_token %}
+        <textarea class="form-control mb-2" name="content" rows="3" placeholder="Add a comment..."></textarea>
+        <button type="submit" class="btn btn-success w-100">Post Comment</button>
+    </form>
+</div>
+{% endblock %}

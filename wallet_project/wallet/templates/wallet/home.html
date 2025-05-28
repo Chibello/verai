@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Wallet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f2f4f7;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            height: 3px;
+            width: 25px;
+            background: white;
+            margin: 4px 0;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                right: 20px;
+                background-color: #1e3c72;
+                padding: 15px;
+                border-radius: 6px;
+                width: max-content;
+                z-index: 1000;
+            }
+
+            .nav.show {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+        }
+
+        /* Dashboard */
+        .dashboard {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .balance, .currency-balances, .recent-transactions, .bank-details {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .balance h2 {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .balance-amount h3 {
+            font-size: 36px;
+            color: #2e7d32;
+            margin-top: 10px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.03);
+        }
+
+        .currency-balances {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .currency-card {
+            flex: 1 1 200px;
+            background-color: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .currency-card span {
+            display: block;
+            font-weight: 600;
+            color: #2e7d32;
+            font-size: 18px;
+        }
+
+        .recent-transactions h3,
+        .bank-details h3 {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .recent-transactions ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recent-transactions li {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .recent-transactions li:last-child {
+            border-bottom: none;
+        }
+
+        .recent-transactions li span:first-child {
+            font-weight: 500;
+        }
+
+        .footer {
+            background-color: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 600px) {
+            .actions {
+                flex-direction: column;
+            }
+
+            .currency-balances {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">
+        <h1>WalletApp</h1>
+    </div>
+    <div class="menu-toggle" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <nav class="nav" id="mobileNav">
+        <a href="{% url 'home' %}">DWP</a>
+        <a href="{% url 'user_dashboard' %}">Transactions</a>
+        <a href="#">Settings</a>
+        <a href="#">Profile</a>
+    </nav>
+</header>
+
+<section class="dashboard">
+
+    <div class="balance">
+        <h2>Account Balance ({{ currency }})</h2>
+        <div class="balance-amount">
+            <h3>{{ balance }}</h3>
+        </div>
+    </div>
+
+    <div class="currency-balances">
+        <div class="currency-card">
+            <p>USD Balance</p>
+            <span>$ {{ balance_usd }}</span>
+        </div>
+        <div class="currency-card">
+            <p>NGN Balance</p>
+            <span>₦ {{ balance_ngn }}</span>
+        </div>
+        <div class="currency-card">
+            <p>EUR Balance</p>
+            <span>€ {{ balance_eur }}</span>
+        </div>
+        <div class="currency-card">
+            <p>GBP Balance</p>
+            <span>£ {{ balance_gbp }}</span>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a href="/api/transfer"><button class="action-btn">Send Money</button></a>
+        <button class="action-btn">Add Funds</button>
+        <button class="action-btn">View Cards</button>
+    </div>
+
+    <div class="recent-transactions">
+        <h3>Recent Transactions</h3>
+        <ul>
+            {% for transaction in transactions %}
+            <li>
+                <span>{{ transaction.transaction_type }}</span>
+                <span>{{ transaction.amount }} {{ transaction.currency }}</span>
+            </li>
+            {% empty %}
+            <li><span>No transactions yet.</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="bank-details">
+        {% if bank_details %}
+            <h3>Your Bank Details</h3>
+            <p>Bank: {{ bank_details.bank_name }}</p>
+            <p>Account Number: {{ bank_details.account_number }}</p>
+        {% else %}
+            <p>No bank details available. Please add your bank information.</p>
+        {% endif %}
+    </div>
+
+</section>
+
+<footer class="footer">
+    <p>&copy; 2025 WalletApp. All rights reserved.</p>
+</footer>
+
+<script>
+    function toggleMenu() {
+        const nav = document.getElementById('mobileNav');
+        nav.classList.toggle('show');
+    }
+</script>
+
+</body>
+</html>

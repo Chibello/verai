@@ -1,0 +1,185 @@
+{% extends 'wallet/base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f4f6f8;
+        font-family: 'Segoe UI', sans-serif;
+        color: #333;
+    }
+
+    .container {
+        max-width: 400px;
+        margin-top: 60px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    p.description {
+        text-align: center;
+        font-size: 0.95rem;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    form label {
+        margin-top: 10px;
+        font-weight: 500;
+    }
+
+    form input {
+        padding: 10px;
+        margin: 5px 0 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        color: #333;
+        transition: border 0.3s ease;
+    }
+
+    form input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    form small {
+        color: #666;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+    }
+
+    .error-message {
+        color: #e74c3c;
+        font-size: 0.9rem;
+        margin-top: -8px;
+        margin-bottom: 10px;
+        display: none;
+    }
+
+    button {
+        padding: 12px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            max-width: 90%;
+            margin-top: 30px;
+            padding: 15px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+        }
+
+        form input {
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            max-width: 95%;
+            padding: 10px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+        }
+
+        form input {
+            font-size: 0.85rem;
+            padding: 7px;
+        }
+
+        button {
+            font-size: 0.85rem;
+            padding: 10px;
+        }
+    }
+</style>
+
+<div class="container">
+    <h2>Create Your Account</h2>
+    <p class="description">Fill in your details below to sign up for a new wallet account.</p>
+    
+    <form method="POST" id="signup-form" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group" style="position: relative; margin-bottom: 20px;">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-help" style="display: none;">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="error-message" style="display: none;">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const formGroups = document.querySelectorAll('.form-group');
+
+        formGroups.forEach(group => {
+            const input = group.querySelector('input');
+            const helpText = group.querySelector('.form-help');
+            const errorMessage = group.querySelector('.error-message');
+
+            if (!input) return;
+
+            // Show help text on focus
+            input.addEventListener('focus', () => {
+                if (helpText) helpText.style.display = 'block';
+            });
+
+            // Hide help text on blur (optional)
+            input.addEventListener('blur', () => {
+                if (helpText) helpText.style.display = 'none';
+            });
+
+            // Show error if it exists when field is blurred
+            input.addEventListener('blur', () => {
+                if (errorMessage && input.value.trim() !== '') {
+                    errorMessage.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

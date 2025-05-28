@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>Request Withdrawal</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="amount">Amount to Withdraw</label>
+                <input type="number" name="amount" id="amount" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Request Withdrawal</button>
+        </form>
+    </div>
+{% endblock %}

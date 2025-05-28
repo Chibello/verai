@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+<title>{% block title %}ZG|delete-BLOG{% endblock %}</title>
+    <h1>Delete Post: {{ post.title }}</h1>
+    <p>Are you sure you want to delete this post?</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'post_detail' post.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}
