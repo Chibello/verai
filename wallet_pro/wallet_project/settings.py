@@ -143,7 +143,7 @@ STATICFILES_DIRS = [
 
 #########
 
-#STATIC_ROOT = BASE_DIR / 'staticfiles'  # For production use, when you run `collectstatic`
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # For production use, when you run `collectstatic`
 #STATIC_URL = 'static/'
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 #STATICFILES_DIRS = [
@@ -184,7 +184,7 @@ FLW_ENCRYPTION_KEY = '0b02cbf325b530459b19901b'
 
 ######
 
-FLUTTERWAVE_CALLBACK_URL = 'https://verai.onender.com/transfer-callback/'
+FLUTTERWAVE_CALLBACK_URL = 'https://verai.onrender.com/transfer-callback/'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
