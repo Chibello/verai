@@ -184,7 +184,7 @@ FLW_ENCRYPTION_KEY = '0b02cbf325b530459b19901b'
 
 ######
 
-FLUTTERWAVE_CALLBACK_URL = 'https://yourdomain.com/transfer-callback/'
+FLUTTERWAVE_CALLBACK_URL = 'https://verai.onender.com/transfer-callback/'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
