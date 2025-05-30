@@ -633,7 +633,7 @@ from django.contrib import messages
 from .models import Transaction
 from .paystack import initiate_paystack_bank_transfer  # ← REPLACED flutterwave
 
-@csrf_exempt  # Only for dev/testing; remove in production
+##@csrf_exempt  # Only for dev/testing; remove in production
 @login_required
 def send(request):
     if request.method == 'GET':
@@ -793,7 +793,7 @@ from .utils import initiate_flutterwave_transfer
 # Set up logging
 logger = logging.getLogger(__name__)
 
-@csrf_exempt
+###@csrf_exempt
 @login_required
 def send_to_bank2(request):
     if request.method == 'GET':
