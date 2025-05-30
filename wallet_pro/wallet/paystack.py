@@ -63,13 +63,27 @@ def initiate_paystack_bank_transfer(user, amount, currency, account_bank, accoun
             'message': 'Insufficient balance'
         }
 
-    # Resolve account name (optional but recommended)
-    account_name = verify_account_name(account_number, account_bank)
-    if not account_name:
-        return {
-            'status': 'error',
-            'message': 'Failed to verify account name'
-        }
+def verify_account_name(account_number, bank_code):
+    """Verify account name using Paystack resolve endpoint."""
+    url = f'{PAYSTACK_BASE_URL}/bank/resolve'
+    headers = {
+        'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
+        'Content-Type': 'application/json',
+    }
+    params = {
+        'account_number': account_number,
+        'bank_code': bank_code
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+    result = response.json()
+
+    print("Paystack resolve response:", result)  # Debug line
+
+    if result.get('status'):
+        return result['data']['account_name']
+    return None
+
 
     # Create transfer recipient
     recipient_code = create_paystack_recipient(account_name, account_number, account_bank, currency)
