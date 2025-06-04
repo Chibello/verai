@@ -136,7 +136,9 @@ PAYSTACK_SECRET_KEY = 'sk_live_af12275d942e8bb69fcc8d07863d16d4d322c08e'
 PAYSTACK_PUBLIC_KEY = 'pk_live_bb9d56bc1bcae1a6466285ae297ceb8f264c6bf2'
 
 AFRICASTALKING_API_KEY = 'your-api-key'
-###########################
+############
+SERVER_IP = "34.213.214.55"
+############
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
