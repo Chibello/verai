@@ -1,13 +1,42 @@
-
 import uuid
 import requests
-from django.conf import settings
 import logging
+from decimal import Decimal
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-def initiate_flutterwave_transfer(amount, currency, account_bank, account_number, narration):
-    reference = str(uuid.uuid4())
+FEES = {
+    "NGN": Decimal("10.00"),
+    "USD": Decimal("0.50"),
+    "EUR": Decimal("0.45"),
+    "GBP": Decimal("0.40")
+}
+
+VATS = {
+    "NGN": Decimal("0.75"),
+    "USD": Decimal("0.05"),
+    "EUR": Decimal("0.045"),
+    "GBP": Decimal("0.04")
+}
+
+def get_user_balance(user, currency):
+    # Customize this method based on your user model fields
+    balance_field = f"balance_{currency.lower()}"
+    return getattr(user, balance_field, Decimal("0.00"))
+
+def debit_user_balance(user, currency, amount):
+    balance_field = f"balance_{currency.lower()}"
+    current_balance = getattr(user, balance_field, None)
+    if current_balance is None:
+        return False
+    if current_balance < amount:
+        return False
+    setattr(user, balance_field, current_balance - amount)
+    user.save(update_fields=[balance_field])
+    return True
+
+def initiate_flutterwave_transfer(amount, currency, account_bank, account_number, narration, reference):
     headers = {
         'Authorization': f'Bearer {settings.FLW_SECRET_KEY}',
         'Content-Type': 'application/json',
@@ -29,49 +58,59 @@ def initiate_flutterwave_transfer(amount, currency, account_bank, account_number
         return response.json()
     except requests.exceptions.RequestException as e:
         logger.error(f"Error contacting Flutterwave API: {str(e)}")
-        return None
+        return {"status": "error", "message": "Failed to connect to Flutterwave."}
 
 def create_transfer(user, currency, amount, bank_code, account_number, narration="Auto Transfer"):
-    from .models import Wallet
-
-    try:
-        wallet = Wallet.objects.get(user=user, currency=currency)
-    except Wallet.DoesNotExist:
-        return {"status": "error", "message": "Wallet not found"}
-
     fee = FEES.get(currency, Decimal("0.00"))
     vat = VATS.get(currency, Decimal("0.00"))
     total = amount + fee + vat
 
-    if not user.debit(total):
+    balance = get_user_balance(user, currency)
+    if balance < total:
         return {
             "status": "error",
             "message": "Insufficient funds",
             "required": str(total),
-            "balance": str(user.balance)
+            "available": str(balance)
+        }
+
+    # Debit user balance
+    if not debit_user_balance(user, currency, total):
+        return {
+            "status": "error",
+            "message": "Failed to debit user balance"
         }
 
     reference = f"txn-{uuid.uuid4()}"
-    payload = {
-        "account_bank": bank_code,  # now using manually entered code
-        "account_number": account_number,
-        "amount": float(amount),
-        "narration": narration,
-        "currency": currency,
-        "reference": reference,
-        "callback_url": "https://verai.onrender.com/transfer/callback"
-    }
 
-    headers = {
-        "Authorization": f"Bearer {FLW_SECRET_KEY}",
-        "Content-Type": "application/json"
-    }
+    flutterwave_response = initiate_flutterwave_transfer(
+        amount=amount,
+        currency=currency,
+        account_bank=bank_code,
+        account_number=account_number,
+        narration=narration,
+        reference=reference
+    )
 
-    response = requests.post("https://api.flutterwave.com/v3/transfers", json=payload, headers=headers)
-    result = response.json()
-
-    if result.get("status") == "success":
-        return {"status": "success", "message": "Transfer initiated", "payload": payload}
+    if flutterwave_response.get("status") == "success":
+        return {
+            "status": "success",
+            "message": "Transfer initiated successfully",
+            "reference": reference,
+            "total_deducted": str(total),
+            "fee": str(fee),
+            "vat": str(vat),
+            "flutterwave": flutterwave_response
+        }
     else:
-        return {"status": "error", "message": result.get("message", "Transfer failed"), "response": result}
+        # Refund balance on failure
+        current_balance = get_user_balance(user, currency)
+        balance_field = f"balance_{currency.lower()}"
+        setattr(user, balance_field, current_balance + total)
+        user.save(update_fields=[balance_field])
 
+        return {
+            "status": "error",
+            "message": flutterwave_response.get("message", "Transfer failed"),
+            "flutterwave": flutterwave_response
+        }
