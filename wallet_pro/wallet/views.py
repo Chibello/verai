@@ -775,7 +775,33 @@ def send2(request):
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-#####################
+###########
+# views.py
+from decimal import Decimal
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from .utils import FEES, VATS
+
+@require_GET
+def get_transfer_charges(request):
+    try:
+        amount = Decimal(request.GET.get('amount', '0'))
+        currency = request.GET.get('currency', 'NGN').upper()
+
+        fee = FEES.get(currency, Decimal("0.00"))
+        vat = VATS.get(currency, Decimal("0.00"))
+        total = amount + fee + vat
+
+        return JsonResponse({
+            'fee': str(fee),
+            'vat': str(vat),
+            'total': str(total),
+        })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+##########
 
 import uuid
 import logging
