@@ -6,84 +6,13 @@
 
 {% block content %}
 <style>
-    .form-container {
-        max-width: 500px;
-        margin: auto;
-        background: #fff;
-        padding: 2rem;
-        box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        border-radius: 8px;
-        font-family: Arial, sans-serif;
-    }
-
-    h2 {
-        text-align: center;
-        color: #333;
-        margin-bottom: 1.5rem;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: #444;
-    }
-
-    input, textarea, select, button {
-        width: 100%;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 1rem;
-        box-sizing: border-box;
-    }
-
-    textarea {
-        resize: vertical;
-        min-height: 100px;
-    }
-
-    button {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-        background-color: #45a049;
-    }
-
-    .message {
-        text-align: center;
-        font-weight: 600;
-    }
-
-    .error {
-        color: #e74c3c;
-    }
-
-    .success {
-        color: #27ae60;
-    }
-
-    @media (max-width: 600px) {
-        .form-container {
-            padding: 1rem;
-        }
-
-        input, textarea, button {
-            font-size: 1rem;
-        }
-    }
+    /* ... keep your existing styles ... */
 </style>
 
 <div class="form-container">
     <h2>Transfer to Bank</h2>
 
-    <form method="POST" action="{% url 'send_to_bank2' %}">
+    <form method="POST" action="{% url 'send_to_bank2' %}" id="transfer-form">
         {% csrf_token %}
 
         <label for="amount">Amount</label>
@@ -106,6 +35,13 @@
         <label for="narration">Narration</label>
         <textarea id="narration" name="narration" placeholder="Optional description..."></textarea>
 
+        <!-- Display fee, VAT, total dynamically -->
+        <div id="charges" style="margin-bottom: 1rem; font-weight: 600; color: #555;">
+            <p>Fee: <span id="fee">0.00</span></p>
+            <p>VAT: <span id="vat">0.00</span></p>
+            <p>Total Deducted: <span id="total">0.00</span></p>
+        </div>
+
         <button type="submit">Submit</button>
     </form>
 
@@ -116,4 +52,47 @@
         <p class="message success">{{ success }} (Reference: {{ reference }})</p>
     {% endif %}
 </div>
+
+<script>
+    (function(){
+        const fees = {
+            "NGN": 10.00,
+            "USD": 0.50,
+            "EUR": 0.45,
+            "GBP": 0.40
+        };
+        const vats = {
+            "NGN": 0.75,
+            "USD": 0.05,
+            "EUR": 0.045,
+            "GBP": 0.04
+        };
+
+        const amountInput = document.getElementById('amount');
+        const currencySelect = document.getElementById('currency');
+        const feeEl = document.getElementById('fee');
+        const vatEl = document.getElementById('vat');
+        const totalEl = document.getElementById('total');
+
+        function updateCharges() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const currency = currencySelect.value;
+
+            const fee = fees[currency] || 0;
+            const vat = vats[currency] || 0;
+            const total = amount + fee + vat;
+
+            feeEl.textContent = fee.toFixed(2);
+            vatEl.textContent = vat.toFixed(2);
+            totalEl.textContent = total.toFixed(2);
+        }
+
+        amountInput.addEventListener('input', updateCharges);
+        currencySelect.addEventListener('change', updateCharges);
+
+        // Initialize on page load
+        updateCharges();
+    })();
+</script>
+
 {% endblock %}
