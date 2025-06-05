@@ -789,11 +789,26 @@ from django.contrib import messages
 from django.db import transaction as db_transaction
 from .models import Transaction
 from .utils import initiate_flutterwave_transfer
+from django.conf import settings
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-###@csrf_exempt
+# Define fees and VAT per currency (match with frontend)
+FEES = {
+    "NGN": Decimal("10.00"),
+    "USD": Decimal("0.50"),
+    "EUR": Decimal("0.45"),
+    "GBP": Decimal("0.40"),
+}
+
+VATS = {
+    "NGN": Decimal("0.75"),
+    "USD": Decimal("0.05"),
+    "EUR": Decimal("0.045"),
+    "GBP": Decimal("0.04"),
+}
+
 @login_required
 def send_to_bank2(request):
     if request.method == 'GET':
@@ -811,26 +826,32 @@ def send_to_bank2(request):
             logger.error(f"Invalid input data: {str(e)}")
             return render(request, 'wallet/send_to_bank2.html', {'error': 'Invalid input data'})
 
-        # Check user balance
+        # Validate currency supported
         currency_field = f'balance_{currency.lower()}'
         if not hasattr(user, currency_field):
             return render(request, 'wallet/send_to_bank2.html', {'error': 'Unsupported currency'})
 
         user_balance = getattr(user, currency_field)
-        if user_balance < amount:
-            return render(request, 'wallet/send_to_bank2.html', {'error': f'Insufficient {currency} balance'})
 
-        # Prepare transfer request to Flutterwave
+        fee = FEES.get(currency, Decimal("0.00"))
+        vat = VATS.get(currency, Decimal("0.00"))
+        total_deduction = amount + fee + vat
+
+        if user_balance < total_deduction:
+            return render(request, 'wallet/send_to_bank2.html', {
+                'error': f'Insufficient {currency} balance to cover amount + fees. Required: {total_deduction}'
+            })
+
+        # Initiate transfer to Flutterwave with the actual amount (not fees)
         reference = str(uuid.uuid4())
         response = initiate_flutterwave_transfer(amount, currency, account_bank, account_number, narration)
 
         if response and response.get('status') == 'success':
-            # Start a database transaction
+            # Deduct total from user balance atomically and log transaction
             with db_transaction.atomic():
-                setattr(user, currency_field, user_balance - amount)
+                setattr(user, currency_field, user_balance - total_deduction)
                 user.save()
 
-                # Log the transaction
                 Transaction.objects.create(
                     user=user,
                     sender=user,
@@ -839,7 +860,9 @@ def send_to_bank2(request):
                     transaction_type='TRANSFER',
                     status='PENDING',
                     reference=reference,
-                    narration=narration
+                    narration=narration,
+                    fee=fee,
+                    vat=vat
                 )
 
             return render(request, 'wallet/send_to_bank2.html', {
@@ -849,56 +872,105 @@ def send_to_bank2(request):
         else:
             error_message = response.get('message', 'Transfer failed') if response else 'Error contacting Flutterwave API.'
             logger.error(f"Flutterwave API error: {error_message}")
-            return render(request, 'wallet/send_to_bank2.html', {
-                'error': error_message
-            })
+            return render(request, 'wallet/send_to_bank2.html', {'error': error_message})
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+import uuid
+import logging
+import requests
+from decimal import Decimal
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db import transaction as db_transaction
+from .models import Transaction
+from .utils import initiate_flutterwave_transfer
+from django.conf import settings
 
-# Webhook to handle the transfer callback from Flutterwave
-@csrf_exempt
-def transfer_callback(request):
-    if request.method == 'POST':
-        # Verify the authorization header is correct
-        authorization_header = request.headers.get('Authorization')
-        if authorization_header != f'Bearer {settings.FLW_SECRET_KEY}':
-            logger.error('Invalid authorization header')
-            return JsonResponse({'error': 'Invalid authorization'}, status=403)
+# Set up logging
+logger = logging.getLogger(__name__)
 
+# Define fees and VAT per currency (match with frontend)
+FEES = {
+    "NGN": Decimal("10.00"),
+    "USD": Decimal("0.50"),
+    "EUR": Decimal("0.45"),
+    "GBP": Decimal("0.40"),
+}
+
+VATS = {
+    "NGN": Decimal("0.75"),
+    "USD": Decimal("0.05"),
+    "EUR": Decimal("0.045"),
+    "GBP": Decimal("0.04"),
+}
+
+@login_required
+def send_to_bank2(request):
+    if request.method == 'GET':
+        return render(request, 'wallet/send_to_bank2.html')
+
+    elif request.method == 'POST':
+        user = request.user
         try:
-            # Parse the incoming JSON data
-            data = request.json()
+            amount = Decimal(request.POST.get('amount'))
+            currency = request.POST.get('currency', 'NGN').upper()
+            account_bank = request.POST.get('account_bank')
+            account_number = request.POST.get('account_number')
+            narration = request.POST.get('narration', 'Wallet payout')
+        except (ValueError, TypeError) as e:
+            logger.error(f"Invalid input data: {str(e)}")
+            return render(request, 'wallet/send_to_bank2.html', {'error': 'Invalid input data'})
 
-            # Ensure that the notification is from Flutterwave
-            if data.get('status') != 'success':
-                logger.warning(f"Transfer failed with status: {data.get('status')}")
-                return JsonResponse({'message': 'Transfer was not successful'}, status=400)
+        # Validate currency supported
+        currency_field = f'balance_{currency.lower()}'
+        if not hasattr(user, currency_field):
+            return render(request, 'wallet/send_to_bank2.html', {'error': 'Unsupported currency'})
 
-            reference = data.get('data', {}).get('reference')
-            if not reference:
-                logger.error('Missing reference ID in webhook')
-                return JsonResponse({'error': 'Missing reference ID'}, status=400)
+        user_balance = getattr(user, currency_field)
 
-            # Update the transaction status based on Flutterwave's response
-            transaction = Transaction.objects.filter(reference=reference).first()
-            if transaction:
-                transaction.status = 'COMPLETED' if data['status'] == 'success' else 'FAILED'
-                transaction.save()
+        fee = FEES.get(currency, Decimal("0.00"))
+        vat = VATS.get(currency, Decimal("0.00"))
+        total_deduction = amount + fee + vat
 
-                # Optionally: Notify the user of the transfer status (email, SMS, etc.)
-                logger.info(f"Transaction {reference} updated to {transaction.status}")
+        if user_balance < total_deduction:
+            return render(request, 'wallet/send_to_bank2.html', {
+                'error': f'Insufficient {currency} balance to cover amount + fees. Required: {total_deduction}'
+            })
 
-                return JsonResponse({'message': 'Webhook processed successfully'}, status=200)
+        # Initiate transfer to Flutterwave with the actual amount (not fees)
+        reference = str(uuid.uuid4())
+        response = initiate_flutterwave_transfer(amount, currency, account_bank, account_number, narration)
 
-            logger.warning(f"Transaction with reference {reference} not found")
-            return JsonResponse({'error': 'Transaction not found'}, status=400)
+        if response and response.get('status') == 'success':
+            # Deduct total from user balance atomically and log transaction
+            with db_transaction.atomic():
+                setattr(user, currency_field, user_balance - total_deduction)
+                user.save()
 
-        except json.JSONDecodeError as e:
-            logger.error(f"JSON decode error: {str(e)}")
-            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
-        except Exception as e:
-            logger.error(f"Error processing webhook: {str(e)}")
-            return JsonResponse({'error': 'Internal Server Error'}, status=500)
+                Transaction.objects.create(
+                    user=user,
+                    sender=user,
+                    amount=amount,
+                    currency=currency,
+                    transaction_type='TRANSFER',
+                    status='PENDING',
+                    reference=reference,
+                    narration=narration,
+                    fee=fee,
+                    vat=vat
+                )
+
+            return render(request, 'wallet/send_to_bank2.html', {
+                'success': 'Transfer initiated successfully',
+                'reference': reference
+            })
+        else:
+            error_message = response.get('message', 'Transfer failed') if response else 'Error contacting Flutterwave API.'
+            logger.error(f"Flutterwave API error: {error_message}")
+            return render(request, 'wallet/send_to_bank2.html', {'error': error_message})
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
