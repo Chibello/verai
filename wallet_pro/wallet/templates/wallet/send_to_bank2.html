@@ -125,45 +125,34 @@
 </div>
 
 <script>
-    (function(){
-        const fees = {
-            "NGN": 10.00,
-            "USD": 0.50,
-            "EUR": 0.45,
-            "GBP": 0.40
-        };
-        const vats = {
-            "NGN": 0.75,
-            "USD": 0.05,
-            "EUR": 0.045,
-            "GBP": 0.04
-        };
+  (function () {
+    const amountInput = document.getElementById('amount');
+    const currencySelect = document.getElementById('currency');
+    const feeEl = document.getElementById('fee');
+    const vatEl = document.getElementById('vat');
+    const totalEl = document.getElementById('total');
 
-        const amountInput = document.getElementById('amount');
-        const currencySelect = document.getElementById('currency');
-        const feeEl = document.getElementById('fee');
-        const vatEl = document.getElementById('vat');
-        const totalEl = document.getElementById('total');
+    async function updateCharges() {
+      const amount = parseFloat(amountInput.value) || 0;
+      const currency = currencySelect.value;
 
-        function updateCharges() {
-            const amount = parseFloat(amountInput.value) || 0;
-            const currency = currencySelect.value;
+      try {
+        const response = await fetch(`/api/get-transfer-charges/?amount=${amount}&currency=${currency}`);
+        const data = await response.json();
 
-            const fee = fees[currency] || 0;
-            const vat = vats[currency] || 0;
-            const total = amount + fee + vat;
+        feeEl.textContent = parseFloat(data.fee).toFixed(2);
+        vatEl.textContent = parseFloat(data.vat).toFixed(2);
+        totalEl.textContent = parseFloat(data.total).toFixed(2);
+      } catch (err) {
+        console.error('Failed to load fees:', err);
+      }
+    }
 
-            feeEl.textContent = fee.toFixed(2);
-            vatEl.textContent = vat.toFixed(2);
-            totalEl.textContent = total.toFixed(2);
-        }
+    amountInput.addEventListener('input', updateCharges);
+    currencySelect.addEventListener('change', updateCharges);
 
-        amountInput.addEventListener('input', updateCharges);
-        currencySelect.addEventListener('change', updateCharges);
-
-        // Initialize on page load
-        updateCharges();
-    })();
+    updateCharges();
+  })();
 </script>
 
 {% endblock %}
