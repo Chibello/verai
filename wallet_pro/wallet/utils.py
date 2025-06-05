@@ -7,6 +7,23 @@ from django.db import transaction
 
 logger = logging.getLogger(__name__)
 
+#########
+# wallet/utils.py
+FEES = {
+    "NGN": 10.00,
+    "USD": 0.50,
+    "EUR": 0.45,
+    "GBP": 0.40
+}
+
+VATS = {
+    "NGN": 0.75,
+    "USD": 0.05,
+    "EUR": 0.045,
+    "GBP": 0.04
+}
+
+##########
 # Default fallback fees in case dynamic ones aren't available
 DEFAULT_FEES = {
     "NGN": Decimal("10.00"),
