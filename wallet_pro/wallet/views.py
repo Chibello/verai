@@ -1050,7 +1050,7 @@ def send_to_bank2(request):
         reference = str(uuid.uuid4())
 
         # Call Flutterwave API to initiate transfer of 'amount' (fees deducted locally)
-        response = initiate_flutterwave_transfer(amount, currency, account_bank, account_number, narration)
+        response = initiate_flutterwave_transfer(amount, currency, account_bank, account_number, reference, narration)
 
         if response and response.get('status') == 'success':
             try:
