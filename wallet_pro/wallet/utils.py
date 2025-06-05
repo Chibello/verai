@@ -43,12 +43,12 @@ def create_transfer(user, currency, amount, bank_code, account_number, narration
     vat = VATS.get(currency, Decimal("0.00"))
     total = amount + fee + vat
 
-    if not wallet.debit(total):
+    if not user.debit(total):
         return {
             "status": "error",
             "message": "Insufficient funds",
             "required": str(total),
-            "balance": str(wallet.balance)
+            "balance": str(user.balance)
         }
 
     reference = f"txn-{uuid.uuid4()}"
