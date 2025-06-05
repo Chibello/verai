@@ -7,7 +7,9 @@ from .views import send_to_bank2
 from .views import send
 from .views import send2
 
-
+# 
+from django.urls import path
+from .views import get_transfer_charges
 
 urlpatterns = [
 
@@ -15,6 +17,8 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('transfer/', views.transfer_funds, name='transfer_funds'),
     path('generate/', views.generate_funds, name='generate_funds'),
+
+    path('api/get-transfer-charges/', get_transfer_charges, name='get_transfer_charges'),
 
     path('deposit/', views.deposit, name='deposit'),
     path('deposit/', views.deposit_view, name='deposit'),
