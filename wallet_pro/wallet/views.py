@@ -877,22 +877,15 @@ def send_to_bank2(request):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 import uuid
 import logging
-import requests
-from decimal import Decimal
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from decimal import Decimal, InvalidOperation
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.db import transaction as db_transaction
 from .models import Transaction
-from .utils import initiate_flutterwave_transfer
-from django.conf import settings
+from .utils import initiate_flutterwave_transfer  # adjust if utils path differs
 
-# Set up logging
 logger = logging.getLogger(__name__)
 
-# Define fees and VAT per currency (match with frontend)
 FEES = {
     "NGN": Decimal("10.00"),
     "USD": Decimal("0.50"),
@@ -915,53 +908,66 @@ def send_to_bank2(request):
     elif request.method == 'POST':
         user = request.user
         try:
-            amount = Decimal(request.POST.get('amount'))
+            amount_str = request.POST.get('amount', '0')
+            amount = Decimal(amount_str)
+            if amount <= 0:
+                return render(request, 'wallet/send_to_bank2.html', {'error': 'Amount must be greater than zero'})
+
             currency = request.POST.get('currency', 'NGN').upper()
             account_bank = request.POST.get('account_bank')
             account_number = request.POST.get('account_number')
             narration = request.POST.get('narration', 'Wallet payout')
-        except (ValueError, TypeError) as e:
-            logger.error(f"Invalid input data: {str(e)}")
+
+            if not account_bank or not account_number:
+                return render(request, 'wallet/send_to_bank2.html', {'error': 'Bank code and account number are required'})
+
+        except (InvalidOperation, TypeError) as e:
+            logger.error(f"Invalid input data: {e}")
             return render(request, 'wallet/send_to_bank2.html', {'error': 'Invalid input data'})
 
-        # Validate currency supported
         currency_field = f'balance_{currency.lower()}'
         if not hasattr(user, currency_field):
-            return render(request, 'wallet/send_to_bank2.html', {'error': 'Unsupported currency'})
+            return render(request, 'wallet/send_to_bank2.html', {'error': f'Unsupported currency: {currency}'})
 
         user_balance = getattr(user, currency_field)
-
         fee = FEES.get(currency, Decimal("0.00"))
         vat = VATS.get(currency, Decimal("0.00"))
         total_deduction = amount + fee + vat
 
         if user_balance < total_deduction:
             return render(request, 'wallet/send_to_bank2.html', {
-                'error': f'Insufficient {currency} balance to cover amount + fees. Required: {total_deduction}'
+                'error': f'Insufficient {currency} balance to cover amount + fees (Total required: {total_deduction})'
             })
 
-        # Initiate transfer to Flutterwave with the actual amount (not fees)
+        # Generate unique reference
         reference = str(uuid.uuid4())
+
+        # Call Flutterwave API to initiate transfer of 'amount' (fees deducted locally)
         response = initiate_flutterwave_transfer(amount, currency, account_bank, account_number, narration)
 
         if response and response.get('status') == 'success':
-            # Deduct total from user balance atomically and log transaction
-            with db_transaction.atomic():
-                setattr(user, currency_field, user_balance - total_deduction)
-                user.save()
+            try:
+                with db_transaction.atomic():
+                    # Deduct total (amount + fee + vat) from user balance atomically
+                    setattr(user, currency_field, user_balance - total_deduction)
+                    user.save(update_fields=[currency_field])
 
-                Transaction.objects.create(
-                    user=user,
-                    sender=user,
-                    amount=amount,
-                    currency=currency,
-                    transaction_type='TRANSFER',
-                    status='PENDING',
-                    reference=reference,
-                    narration=narration,
-                    fee=fee,
-                    vat=vat
-                )
+                    # Create transaction record
+                    Transaction.objects.create(
+                        user=user,
+                        sender=user,
+                        amount=amount,
+                        currency=currency,
+                        transaction_type='TRANSFER',
+                        status='PENDING',
+                        reference=reference,
+                        narration=narration,
+                        fee=fee,
+                        vat=vat
+                    )
+            except Exception as e:
+                logger.error(f"DB error during transfer transaction creation: {e}")
+                return render(request, 'wallet/send_to_bank2.html', {'error': 'Internal error. Please try again later.'})
 
             return render(request, 'wallet/send_to_bank2.html', {
                 'success': 'Transfer initiated successfully',
@@ -972,6 +978,115 @@ def send_to_bank2(request):
             logger.error(f"Flutterwave API error: {error_message}")
             return render(request, 'wallet/send_to_bank2.html', {'error': error_message})
 
+    # For methods other than GET or POST
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+import uuid
+import logging
+from decimal import Decimal, InvalidOperation
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.db import transaction as db_transaction
+from .models import Transaction
+from .utils import initiate_flutterwave_transfer  # adjust if utils path differs
+
+logger = logging.getLogger(__name__)
+
+FEES = {
+    "NGN": Decimal("10.00"),
+    "USD": Decimal("0.50"),
+    "EUR": Decimal("0.45"),
+    "GBP": Decimal("0.40"),
+}
+
+VATS = {
+    "NGN": Decimal("0.75"),
+    "USD": Decimal("0.05"),
+    "EUR": Decimal("0.045"),
+    "GBP": Decimal("0.04"),
+}
+
+@login_required
+def send_to_bank2(request):
+    if request.method == 'GET':
+        return render(request, 'wallet/send_to_bank2.html')
+
+    elif request.method == 'POST':
+        user = request.user
+        try:
+            amount_str = request.POST.get('amount', '0')
+            amount = Decimal(amount_str)
+            if amount <= 0:
+                return render(request, 'wallet/send_to_bank2.html', {'error': 'Amount must be greater than zero'})
+
+            currency = request.POST.get('currency', 'NGN').upper()
+            account_bank = request.POST.get('account_bank')
+            account_number = request.POST.get('account_number')
+            narration = request.POST.get('narration', 'Wallet payout')
+
+            if not account_bank or not account_number:
+                return render(request, 'wallet/send_to_bank2.html', {'error': 'Bank code and account number are required'})
+
+        except (InvalidOperation, TypeError) as e:
+            logger.error(f"Invalid input data: {e}")
+            return render(request, 'wallet/send_to_bank2.html', {'error': 'Invalid input data'})
+
+        currency_field = f'balance_{currency.lower()}'
+        if not hasattr(user, currency_field):
+            return render(request, 'wallet/send_to_bank2.html', {'error': f'Unsupported currency: {currency}'})
+
+        user_balance = getattr(user, currency_field)
+        fee = FEES.get(currency, Decimal("0.00"))
+        vat = VATS.get(currency, Decimal("0.00"))
+        total_deduction = amount + fee + vat
+
+        if user_balance < total_deduction:
+            return render(request, 'wallet/send_to_bank2.html', {
+                'error': f'Insufficient {currency} balance to cover amount + fees (Total required: {total_deduction})'
+            })
+
+        # Generate unique reference
+        reference = str(uuid.uuid4())
+
+        # Call Flutterwave API to initiate transfer of 'amount' (fees deducted locally)
+        response = initiate_flutterwave_transfer(amount, currency, account_bank, account_number, narration)
+
+        if response and response.get('status') == 'success':
+            try:
+                with db_transaction.atomic():
+                    # Deduct total (amount + fee + vat) from user balance atomically
+                    setattr(user, currency_field, user_balance - total_deduction)
+                    user.save(update_fields=[currency_field])
+
+                    # Create transaction record
+                    Transaction.objects.create(
+                        user=user,
+                        sender=user,
+                        amount=amount,
+                        currency=currency,
+                        transaction_type='TRANSFER',
+                        status='PENDING',
+                        reference=reference,
+                        narration=narration,
+                        fee=fee,
+                        vat=vat
+                    )
+            except Exception as e:
+                logger.error(f"DB error during transfer transaction creation: {e}")
+                return render(request, 'wallet/send_to_bank2.html', {'error': 'Internal error. Please try again later.'})
+
+            return render(request, 'wallet/send_to_bank2.html', {
+                'success': 'Transfer initiated successfully',
+                'reference': reference
+            })
+        else:
+            error_message = response.get('message', 'Transfer failed') if response else 'Error contacting Flutterwave API.'
+            logger.error(f"Flutterwave API error: {error_message}")
+            return render(request, 'wallet/send_to_bank2.html', {'error': error_message})
+
+    # For methods other than GET or POST
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 #####################
