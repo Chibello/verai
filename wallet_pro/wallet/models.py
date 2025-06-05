@@ -77,7 +77,8 @@ class Transaction(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     reference = models.CharField(max_length=100, null=True, blank=True)
     narration = models.TextField(blank=True, null=True)
-
+    fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    vat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return f"{self.transaction_type} of {self.amount} {self.currency} by {self.user.username}"
