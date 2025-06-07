@@ -121,3 +121,13 @@ class BankDetails(models.Model):
 
     def __str__(self):
         return f"{self.bank_name} - {self.account_number}"
+
+###############
+class FlutterwaveWalletBalance(models.Model):
+    currency = models.CharField(max_length=4, choices=[('NGN', 'NGN'), ('USD', 'USD'), ('GBP', 'GBP'), ('EUR', 'EUR')])
+    balance = models.DecimalField(max_digits=12, decimal_places=2)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.currency} Wallet - {self.balance}"
+
