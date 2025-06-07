@@ -1154,3 +1154,29 @@ def send_to_bank2(request):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 '''
 ############
+
+from decimal import Decimal
+from django.shortcuts import render, redirect
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+from .models import Transaction
+
+@staff_member_required
+def record_wallet_funding(request):
+    if request.method == "POST":
+        amount = Decimal(request.POST.get("amount", "0"))
+        currency = request.POST.get("currency", "NGN")
+        narration = request.POST.get("narration", "Admin funded FLW wallet manually")
+
+        Transaction.objects.create(
+            user=request.user,
+            amount=amount,
+            currency=currency,
+            transaction_type='DEPOSIT',
+            status='COMPLETED',
+            narration=narration
+        )
+        return render(request, "wallet/fund_confirmed.html", {"message": "Wallet funding recorded"})
+    
+    return render(request, "wallet/fund_wallet.html")
+#############
