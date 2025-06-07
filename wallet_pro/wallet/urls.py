@@ -12,8 +12,8 @@ from .views import get_transfer_charges
 from django.urls import path
 from .views import record_wallet_funding
 from .views import bank_webhook_credit_listener
-
-
+from .views import flutterwave_transfer_webhook
+    
 
 urlpatterns = [
 
@@ -24,8 +24,9 @@ urlpatterns = [
 
     path('admin/fund-wallet/', record_wallet_funding, name='fund_wallet'),
     path('api/get-transfer-charges/', get_transfer_charges, name='get_transfer_charges'),
-    path('webhook/flutterwave/', views.flutterwave_webhook, name='flutterwave_webhook'),
+    #path('webhook/flutterwave/', views.flutterwave_webhook, name='flutterwave_webhook'),
     path('webhook/bank-credit/', bank_webhook_credit_listener, name='bank_credit_webhook'),
+    path('transfer-callback/', flutterwave_transfer_webhook, name='flutterwave_webhook'),
 
     path('deposit/', views.deposit, name='deposit'),
     path('deposit/', views.deposit_view, name='deposit'),
