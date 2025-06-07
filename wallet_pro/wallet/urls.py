@@ -19,7 +19,7 @@ urlpatterns = [
     path('generate/', views.generate_funds, name='generate_funds'),
 
     path('api/get-transfer-charges/', get_transfer_charges, name='get_transfer_charges'),
-    path('webhook/flutterwave/', views.flutterwave_webhook, name='flutterwave_webhook'),
+    #path('webhook/flutterwave/', views.flutterwave_webhook, name='flutterwave_webhook'),
 
     path('deposit/', views.deposit, name='deposit'),
     path('deposit/', views.deposit_view, name='deposit'),
