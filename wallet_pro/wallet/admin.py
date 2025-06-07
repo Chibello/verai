@@ -39,6 +39,13 @@ class TransactionInline(admin.TabularInline):
     fk_name = 'user'  # Or 'recipient' — depending on use case
     extra = 0
 
+from django.contrib import admin
+from .models import FlutterwaveWalletBalance
+
+@admin.register(FlutterwaveWalletBalance)
+class FlutterwaveWalletAdmin(admin.ModelAdmin):
+    list_display = ("currency", "balance", "updated_at")
+
 
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'is_active', 'is_staff')
