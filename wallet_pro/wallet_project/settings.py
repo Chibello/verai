@@ -190,8 +190,11 @@ FLW_SECRET_KEY = 'FLWSECK-0b02cbf325b58029cb48c9cc1cbc9c95-1971888b842vt-X'
 FLW_ENCRYPTION_KEY = '0b02cbf325b530459b19901b'
 
 ######
+# Flutterwave Settings
+FLW_SECRET_KEY = 'FLWSECK-0b02cbf325b58029cb48c9cc1cbc9c95-1971888b842vt-X'
+FLUTTERWAVE_CALLBACK_URL = 'https://verai.onrender.com/transfer-callback/'  # Update this
 
-FLUTTERWAVE_CALLBACK_URL = 'https://verai.onrender.com/transfer-callback/'
+# Logging Setup (Optional but recommended)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -211,6 +214,28 @@ LOGGING = {
     },
 }
 
+######
+'''
+FLUTTERWAVE_CALLBACK_URL = 'https://verai.onrender.com/transfer-callback/'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'error_log.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
+'''
 ####
 
 PAYSTACK_SECRET_KEY = os.getenv('sk_live_af12275d942e8bb69fcc8d07863d16d4d322c08e')
