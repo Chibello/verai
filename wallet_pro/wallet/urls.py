@@ -8,8 +8,12 @@ from .views import send
 from .views import send2
 
 # 
-from django.urls import path
 from .views import get_transfer_charges
+from django.urls import path
+from .views import record_wallet_funding
+
+    
+
 
 urlpatterns = [
 
@@ -18,6 +22,7 @@ urlpatterns = [
     path('transfer/', views.transfer_funds, name='transfer_funds'),
     path('generate/', views.generate_funds, name='generate_funds'),
 
+    path('admin/fund-wallet/', record_wallet_funding, name='fund_wallet'),
     path('api/get-transfer-charges/', get_transfer_charges, name='get_transfer_charges'),
     #path('webhook/flutterwave/', views.flutterwave_webhook, name='flutterwave_webhook'),
 
