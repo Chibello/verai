@@ -1230,3 +1230,54 @@ def send_to_bank2(request):
             return render(request, 'wallet/send_to_bank2.html', {'error': 'Internal error. Please try again later.'})
 
 ##########
+
+#############
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .models import Transaction
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+@require_POST
+def flutterwave_webhook(request):
+    try:
+        payload = json.loads(request.body)
+        data = payload.get('data', {})
+        reference = data.get('reference')
+        status = data.get('status')  # "SUCCESSFUL", "FAILED", etc.
+
+        logger.info(f"Webhook received for reference {reference}: {status}")
+
+        if not reference:
+            return JsonResponse({'error': 'No reference provided'}, status=400)
+
+        transaction = Transaction.objects.filter(reference=reference).first()
+        if not transaction:
+            return JsonResponse({'error': 'Transaction not found'}, status=404)
+
+        if status == 'SUCCESSFUL':
+            transaction.status = 'SUCCESSFUL'
+            transaction.save(update_fields=['status'])
+
+        elif status == 'FAILED':
+            transaction.status = 'FAILED'
+            transaction.save(update_fields=['status'])
+
+            # Optional refund logic if wallet was debited
+            user = transaction.user
+            currency_field = f'balance_{transaction.currency.lower()}'
+            refund_amount = transaction.amount + transaction.fee + transaction.vat
+            setattr(user, currency_field, getattr(user, currency_field) + refund_amount)
+            user.save(update_fields=[currency_field])
+
+        return JsonResponse({'status': 'success'})
+
+    except Exception as e:
+        logger.exception("Webhook processing failed")
+        return JsonResponse({'error': 'Webhook processing failed'}, status=500)
+
+############
