@@ -901,6 +901,8 @@ def send_to_bank2(request):
             return render(request, 'wallet/send_to_bank2.html', {'error': error_message})
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+'''
 import uuid
 import logging
 from decimal import Decimal, InvalidOperation
@@ -1114,5 +1116,117 @@ def send_to_bank2(request):
     # For methods other than GET or POST
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+'''
+##########
+import uuid
+import logging
+from decimal import Decimal, InvalidOperation
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.db import transaction as db_transaction
+from .models import Transaction
+from .utils import initiate_flutterwave_transfer
 
-#####################
+logger = logging.getLogger(__name__)
+
+FEES = {
+    "NGN": Decimal("10.00"),
+    "USD": Decimal("0.50"),
+    "EUR": Decimal("0.45"),
+    "GBP": Decimal("0.40"),
+}
+
+VATS = {
+    "NGN": Decimal("0.75"),
+    "USD": Decimal("0.05"),
+    "EUR": Decimal("0.045"),
+    "GBP": Decimal("0.04"),
+}
+
+@login_required
+def send_to_bank2(request):
+    if request.method == 'GET':
+        return render(request, 'wallet/send_to_bank2.html')
+
+    elif request.method == 'POST':
+        user = request.user
+        try:
+            amount = Decimal(request.POST.get('amount', '0'))
+            if amount <= 0:
+                return render(request, 'wallet/send_to_bank2.html', {'error': 'Amount must be greater than zero'})
+
+            currency = request.POST.get('currency', 'NGN').upper()
+            account_bank = request.POST.get('account_bank')
+            account_number = request.POST.get('account_number')
+            narration = request.POST.get('narration', 'Wallet payout')
+
+            if not account_bank or not account_number:
+                return render(request, 'wallet/send_to_bank2.html', {'error': 'Bank code and account number are required'})
+
+        except (InvalidOperation, TypeError) as e:
+            logger.error(f"Invalid input data: {e}")
+            return render(request, 'wallet/send_to_bank2.html', {'error': 'Invalid input data'})
+
+        currency_field = f'balance_{currency.lower()}'
+        if not hasattr(user, currency_field):
+            return render(request, 'wallet/send_to_bank2.html', {'error': f'Unsupported currency: {currency}'})
+
+        user_balance = getattr(user, currency_field)
+        fee = FEES.get(currency, Decimal("0.00"))
+        vat = VATS.get(currency, Decimal("0.00"))
+        total_deduction = amount + fee + vat
+
+        if user_balance < total_deduction:
+            return render(request, 'wallet/send_to_bank2.html', {
+                'error': f'Insufficient {currency} balance to cover amount + fees (Total required: {total_deduction})'
+            })
+
+        reference = str(uuid.uuid4())
+
+        try:
+            with db_transaction.atomic():
+                # Deduct wallet
+                setattr(user, currency_field, user_balance - total_deduction)
+                user.save(update_fields=[currency_field])
+
+                # Create transaction with pending status
+                Transaction.objects.create(
+                    user=user,
+                    sender=user,
+                    amount=amount,
+                    currency=currency,
+                    transaction_type='TRANSFER',
+                    status='PENDING',
+                    reference=reference,
+                    narration=narration,
+                    fee=fee,
+                    vat=vat
+                )
+
+            # Initiate transfer outside atomic block
+            response = initiate_flutterwave_transfer(
+                amount=amount,
+                currency=currency,
+                account_bank=account_bank,
+                account_number=account_number,
+                reference=reference,
+                narration=narration
+            )
+
+            if not response or response.get('status') != 'success':
+                logger.error(f"Flutterwave transfer failed for {reference}: {response}")
+                return render(request, 'wallet/send_to_bank2.html', {
+                    'error': f"Flutterwave transfer failed: {response.get('message', 'Unknown error')}",
+                    'reference': reference
+                })
+
+            return render(request, 'wallet/send_to_bank2.html', {
+                'success': 'Transfer request submitted successfully. Awaiting confirmation.',
+                'reference': reference
+            })
+
+        except Exception as e:
+            logger.exception(f"Transfer failed: {e}")
+            return render(request, 'wallet/send_to_bank2.html', {'error': 'Internal error. Please try again later.'})
+
+##########
