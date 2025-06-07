@@ -294,3 +294,40 @@ def create_transfer(user, currency, amount, bank_code, account_number, narration
             "message": "Unexpected server error during transfer",
         }
 '''
+######################
+
+import requests
+from decimal import Decimal
+from django.conf import settings
+from .models import FlutterwaveWalletBalance
+
+def update_flutterwave_wallet_balance():
+    url = "https://api.flutterwave.com/v3/balances"
+
+    headers = {
+        "Authorization": f"Bearer {settings.FLW_SECRET_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+
+        if data.get("status") == "success":
+            balances = data.get("data", [])
+            for wallet in balances:
+                currency = wallet["currency"]
+                amount = Decimal(wallet["available_balance"])
+
+                obj, _ = FlutterwaveWalletBalance.objects.update_or_create(
+                    currency=currency,
+                    defaults={"balance": amount}
+                )
+        return True
+    except Exception as e:
+        print(f"[Balance Update Error] {e}")
+        return False
+
+
+######################
