@@ -1179,4 +1179,64 @@ def record_wallet_funding(request):
         return render(request, "wallet/fund_confirmed.html", {"message": "Wallet funding recorded"})
     
     return render(request, "wallet/fund_wallet.html")
+
 #############
+@csrf_exempt
+def flutterwave_transfer_webhook(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            transfer = data.get("data", {})
+            reference = transfer.get("reference")
+            status = transfer.get("status")
+
+            tx = Transaction.objects.filter(reference=reference).first()
+            if tx:
+                if status == "SUCCESSFUL":
+                    tx.status = "COMPLETED"
+                elif status == "FAILED":
+                    tx.status = "FAILED"
+                elif status == "REVERSED":
+                    tx.status = "FAILED"
+                tx.save(update_fields=["status"])
+            return JsonResponse({"message": "ok"}, status=200)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid method"}, status=405)
+
+#############
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.http import JsonResponse
+from .models import Transaction
+
+@csrf_exempt
+def bank_webhook_credit_listener(request):
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            account_number = payload.get("account_number")
+            amount = Decimal(payload.get("amount"))
+            currency = payload.get("currency", "NGN")
+            reference = payload.get("reference")
+
+            # This simulates detection of a deposit to your NUBAN
+            Transaction.objects.create(
+                user=None,  # Or assign to system admin user
+                amount=amount,
+                currency=currency,
+                transaction_type="DEPOSIT",
+                status="COMPLETED",
+                reference=reference,
+                narration=f"Auto NUBAN credit from {account_number}"
+            )
+            # Optional: Use Flutterwave API to move it to FLW wallet or log it
+            return JsonResponse({"message": "Funding recorded"}, status=200)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Method not allowed"}, status=405)
+
+############
+
