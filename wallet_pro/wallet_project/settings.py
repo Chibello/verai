@@ -148,7 +148,9 @@ STATICFILES_DIRS = [
     #os.path.join(BASE_DIR, 'payment_app\\static'),
 ]
 
-#########
+####
+FLUTTERWAVE_CALLBACK_URL = 'https://verai.onrender.com/transfer-callback/'
+####
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # For production use, when you run `collectstatic`
 #STATIC_URL = 'static/'
