@@ -4,7 +4,7 @@ from django.conf import settings
 import logging
 
 
-'''
+
 logger = logging.getLogger(__name__)
 
 def initiate_flutterwave_transfer(amount, currency, account_bank, account_number, narration):
@@ -91,3 +91,5 @@ def initiate_flutterwave_transfer(amount, currency, account_bank, account_number
     except requests.exceptions.RequestException as e:
         logger.error(f"Flutterwave request error: {str(e)}")
         return None
+'''
+
