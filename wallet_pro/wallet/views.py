@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.db import transaction
 from decimal import Decimal
 from .gateway import CustomPaymentGateway
+from .utils import FEES, VATS
 
 ######
 
