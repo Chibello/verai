@@ -9,6 +9,22 @@ from .models import Transaction
 logger = logging.getLogger(__name__)
 
 # === Fallback Fees ===
+
+
+FEES = {
+    "NGN": Decimal("10.00"),
+    "USD": Decimal("0.50"),
+    "EUR": Decimal("0.45"),
+    "GBP": Decimal("0.40"),
+}
+
+VATS = {
+    "NGN": Decimal("0.75"),
+    "USD": Decimal("0.05"),
+    "EUR": Decimal("0.045"),
+    "GBP": Decimal("0.04"),
+}
+
 DEFAULT_FEES = {
     "NGN": Decimal("10.00"),
     "USD": Decimal("0.50"),
