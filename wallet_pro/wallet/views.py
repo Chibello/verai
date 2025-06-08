@@ -1012,39 +1012,54 @@ def send_to_bank2(request):
 
 ####
 
+# wallet/views.py
+import requests
 from decimal import Decimal
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .utils import process_user_payout
 
 @login_required
 def send_to_bank(request):
     if request.method == "POST":
-        amount = Decimal(request.POST.get("amount", "0"))
-        currency = request.POST.get("currency", "NGN")
-        bank_code = request.POST.get("account_bank")
+        amount = Decimal(request.POST.get("amount"))
+        currency = request.POST.get("currency")
+        account_bank = request.POST.get("account_bank")
         account_number = request.POST.get("account_number")
-        narration = request.POST.get("narration", "Wallet withdrawal")
+        narration = request.POST.get("narration", "Payout from wallet")
 
-        result = process_user_payout(
-            request.user,
-            amount,
-            currency,
-            bank_code,
-            account_number,
-            narration
-        )
+        if request.user.wallet_balance < amount:
+            return render(request, "wallet/send_to_bank2.html", {"error": "Insufficient balance."})
 
-        if result["status"] == "success":
+        # Deduct user's wallet balance (pseudo-code)
+        request.user.wallet_balance -= amount
+        request.user.save()
+
+        # Initiate Flutterwave transfer
+        response = requests.post(
+            "https://api.flutterwave.com/v3/transfers",
+            headers={
+                "Authorization": "Bearer YOUR_FLW_SECRET_KEY",
+                "Content-Type": "application/json"
+            },
+            json={
+                "account_bank": account_bank,
+                "account_number": account_number,
+                "amount": float(amount),
+                "currency": currency,
+                "narration": narration,
+                "callback_url": "https://yourdomain.com/wallet/transfer-callback/"
+            }
+        ).json()
+
+        if response["status"] == "success":
             return render(request, "wallet/send_to_bank2.html", {
-                "success": result["message"],
-                "reference": result["reference"]
+                "success": "Transfer successful.",
+                "reference": response["data"]["reference"]
             })
         else:
-            return render(request, "wallet/send_to_bank2.html", {"error": result["message"]})
+            return render(request, "wallet/send_to_bank2.html", {"error": response["message"]})
 
     return render(request, "wallet/send_to_bank2.html")
-
 
 ####
 '''
