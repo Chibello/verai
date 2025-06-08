@@ -27,6 +27,7 @@ urlpatterns = [
     #path('webhook/flutterwave/', views.flutterwave_webhook, name='flutterwave_webhook'),
     path('webhook/bank-credit/', bank_webhook_credit_listener, name='bank_credit_webhook'),
     path('transfer-callback/', flutterwave_transfer_webhook, name='flutterwave_webhook'),
+    path("api/admin/fund-wallet/", views.record_wallet_funding, name="record_wallet_funding"),
 
     path('deposit/', views.deposit, name='deposit'),
     path('deposit/', views.deposit_view, name='deposit'),
