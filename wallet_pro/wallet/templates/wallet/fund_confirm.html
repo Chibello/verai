@@ -1,2 +1,21 @@
-<h3>{{ message }}</h3>
-<a href="/">Back to Dashboard</a>
+{% extends 'wallet/base.html' %}
+
+{% block title %}Wallet Funded{% endblock %}
+
+{% block content %}
+  <div class="form-container">
+
+    <h3>{{ message }}</h3>
+    <a href="/">Back to Dashboard</a>
+    
+    <h2>Wallet Funded Successfully</h2>
+    <p><strong>User:</strong> {{ user.username }}</p>
+    <p><strong>Amount:</strong> {{ amount }} {{ currency }}</p>
+    <p><strong>Status:</strong> {{ status }}</p>
+    <a href="{% url 'admin:index' %}" class="btn">Return to Admin Dashboard</a>
+  </div>
+{% endblock %}
+
+
+
+
